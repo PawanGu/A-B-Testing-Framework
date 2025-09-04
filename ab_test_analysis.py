@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import numpy as np
 import pandas as pd
 from scipy.stats import norm
 import matplotlib.pyplot as plt
@@ -61,6 +62,38 @@ def main():
     plt.title("Conversion Rate by Group")
     plt.ylabel("Conversion Rate")
     plt.savefig("figures/group_conversion.png", bbox_inches="tight")
+    plt.close()
+
+    # Distributions
+    rng = np.random.default_rng(42)
+    n_sim = c_n + t_n
+    sim_A = rng.binomial(c_n, cr_control, size=n_sim) / c_n
+    sim_B = rng.binomial(t_n, cr_treat, size=n_sim) / t_n
+
+    plt.figure(figsize=(8,5))
+    plt.hist(sim_A, bins=50, alpha=0.6, density=True, label=f"Control (A)\nmean={cr_control:.3f}")
+    plt.hist(sim_B, bins=50, alpha=0.6, density=True, label=f"Treatment (B)\nmean={cr_treat:.3f}")
+    plt.axvline(cr_control, linestyle="--")
+    plt.axvline(cr_treat, linestyle="--")
+    plt.title("Simulated Sampling Distributions of Conversion Rates")
+    plt.xlabel("Conversion Rate")
+    plt.ylabel("Density")
+    plt.legend()
+    plt.savefig("figures/ab_dist_control_vs_treatment.png", bbox_inches="tight")
+    plt.close()
+
+    diff = sim_B - sim_A
+    ci_low, ci_high = np.percentile(diff, [2.5, 97.5])
+    plt.figure(figsize=(8,5))
+    plt.hist(diff, bins=50, alpha=0.7, density=True)
+    plt.axvline(diff.mean(), linestyle="--", label=f"Mean diff = {diff.mean():.3f}")
+    plt.axvline(ci_low, linestyle="--", label=f"95% CI: [{ci_low:.3f}, {ci_high:.3f}]")
+    plt.axvline(ci_high, linestyle="--")
+    plt.title("Distribution of Conversion Rate Difference (B - A)")
+    plt.xlabel("Difference in Conversion Rate")
+    plt.ylabel("Density")
+    plt.legend()
+    plt.savefig("figures/ab_dist_difference.png", bbox_inches="tight")
     plt.close()
 
     # Report
