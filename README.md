@@ -24,6 +24,3 @@ python ab_test_analysis.py
 - Add CUPED / stratification by `country` or `device`
 - Add multiple KPIs (CTR, AOV, revenue)
 - Log results to a dashboard (Looker/Tableau/Power BI) or a simple Streamlit app
-
-## Suggested CV Bullet
-- **Designed an A/B testing framework in Python to evaluate pricing/promotions on conversion; implemented z-tests with CIs, lift metrics, and sample-size calculators; communicated insights via auto-generated reports and visuals.**
